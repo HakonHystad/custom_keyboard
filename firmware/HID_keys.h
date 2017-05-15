@@ -149,6 +149,8 @@ Section:                                          ~HID keyboard usage table
 #define N_KEY_BRACKET		KEY_NON_US_BS
 #define N_KEY_MINUS		KEY_SLASH
 
+#define KEY_FN			0xFF
+
 
 
 #endif//_LAYOUT_NO_

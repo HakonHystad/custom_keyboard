@@ -19,6 +19,7 @@ Section:                                          ~libs
 
 #include <stdint.h>
 
+
 /*#############################################################################################################
 
 Section:                                          ~declarations
@@ -40,14 +41,39 @@ public:
     uint16_t getKey() const{ return key; }
     uint16_t getAltKey() const{ return altKey; }
 
-    void setKey( uint16_t key ){ this->key = key; }
+    void setKey( uint16_t key )
+    {
+	this->key = key;
+	
+	if( key>=MODIFIERKEY_ALT )
+	{
+	    modifier = true;
+	    return;
+	}
+	else
+	    modifier = false;
+
+	if( key == KEY_FN )
+	    fn = true;
+    }
+    
     void setAltKey( uint16_t altKey ){ this->altKey = altKey; }
+
+    bool isModifier(){ return modifier; }
+    bool isFn(){ return fn; }
+
+    friend bool operator ==( const Key &lhs, const Key &rhs )
+    {
+	return ( lhs.key == rhs.key || lhs.altKey == rhs.altKey );
+    }
 
 protected:
 
 private:
     uint16_t key;
     uint16_t altKey;
+    bool modifier = false;
+    bool fn = false;
 
 };
 
