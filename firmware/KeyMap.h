@@ -17,7 +17,7 @@ Section:                                          ~libs
 
 #include "keyboardConfig.h"
 
-#include <cstdint>
+#include <stdint.h>
 
 /*#############################################################################################################
 

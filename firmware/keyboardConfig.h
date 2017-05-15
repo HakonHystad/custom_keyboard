@@ -95,9 +95,8 @@ uint8_t rowPinArray[ ROW_NR ] = { ROW0, ROW1, ROW2, ROW3, ROW4 /*, ROW5, ROW6, R
 /* column pins */
 #define COL_PORT_1 B // x
 
-#if COL_NR>8
-# define COL_PORT_2 D // y
-#endif
+#define COL_PORT_2 D // y
+
 
 // assumes column pins in assending order, ex: column 0 to COL_NR-1 = PINx0 (-PINx7) to (PINy0-) PINy7
 // NB: ground pins not in use to avoid floating input
@@ -122,7 +121,7 @@ Section:                                          ~macros
 // look-up corresponding pin
 #define ROW_TO_PIN( d ) rowPinArray[ d ]
 
-typedef unsigned char uchar;
+
 
 /*#############################################################################################################
 
