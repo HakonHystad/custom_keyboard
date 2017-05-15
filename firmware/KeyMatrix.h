@@ -34,19 +34,27 @@ public:
     Keyboard();
 
     void scan();
+    bool isPressed( const Key &key );
 
+    void getKeycodes( uint16_t a[] );
+    
 protected:
 
 private:
     
     uint8_t keyState[2][ROW_NR] = {{0}};
     KeyMap map;
-    Key pressedKeys[6];
+    volatile Key pressedKeys[6];
+    uint8_t keyCount = 0;
 
-    uint16_t modifier;
-    bool fn;
-
+    uint16_t modifier = 0;
+    bool fn = false;
+    
+    void resetKeys();
     void setKeys();
+    void setKey( const uint8_t r, const uint8_t c );
+    
+
     
 };
 

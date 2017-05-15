@@ -15,7 +15,6 @@ KeyMatrix - constructor
  *
  *************************************************************************************************************/
 KeyMatrix::KeyMatrix()
-    : modifier(0),fn(false)
 {
     /* set up pin configuration */
     
@@ -92,13 +91,143 @@ void KeyMatrix::scan()
 
 /**************************************************************************************************************
  *
+ resetKeys
+ *
+ *************************************************************************************************************/
+void Keymatrix::resetKeys()
+{
+
+    // null out
+    for (int i = 0; i < keyCount; ++i)
+    {
+	pressedKeys[i] = Key();
+    }
+
+    keyCount = 0;
+
+
+    modifier = 0;
+    fn = false;
+
+}
+
+
+
+/**************************************************************************************************************
+ *
  setKeys
  *
  *************************************************************************************************************/
-void Keymatrix::setKeys()
+void KeyMatrix::setKeys()
 {
+    cli();// ignore usb interrupt
+    
+    resetKeys();
+    
+    /* check if key is set, if so convert to keyMap index  */
+    for (int r = 0; r < ROW_NR; ++r)
+    {
+	for (int c = 0; c < 2; ++c)
+	{
+	    
+	    if( keyState[c][r] == 0 ) continue;// no keys pressed
+
+	    /* stupid but effective..*/
+	    if( keyState[c][r] & 0x01 )
+		setKey( r, 0 );
+	    if( keyState[c][r] & 0x02 )
+		setKey( r, 1 );
+	    if( keyState[c][r] & 0x04 )
+		setKey( r, 2 );
+	    if( keyState[c][r] & 0x08 )
+		setKey( r, 3 );
+	    if( keyState[c][r] & 0x10 )
+		setKey( r, 4 );
+	    if( keyState[c][r] & 0x20 )
+		setKey( r, 5 );
+	    if( keyState[c][r] & 0x40 )
+		setKey( r, 6 );
+	    if( keyState[c][r] & 0x80 )
+		setKey( r, 7 );
+	}// for c
+	
+    }// for r
+
+    sei();
     
 }
+
+
+/**************************************************************************************************************
+ *
+ setKey
+ *
+ *************************************************************************************************************/
+ void KeyMatrix::setKey( const uint8_t r, const uint8_t c )
+ {
+     auto key = keyMap( r, c );
+
+     if( key.isModifier() )
+     {
+	 modifier |= key.getKey();
+	 return;
+     }
+
+     if( key.isFn() )
+     {
+	 fn = true;
+	 return;
+     }
+
+     
+     if( keyCount >= 6 )// 6 key rollover
+	 keyCount = 0;
+
+    
+     pressedKeys[keyCount++] = key;
+ }
+
+
+/**************************************************************************************************************
+ *
+ isPressed
+ *
+ *************************************************************************************************************/
+bool KeyMatrix::isPressed( const Key &key )
+{
+    for (int i = 0; i < 6; ++i)
+    {
+	if( pressedKeys[i] == key ) return true;
+    }
+
+    return false;
+}
+
+
+/**************************************************************************************************************
+ *
+ getKeycodes
+ *
+ *************************************************************************************************************/
+void KeyMatrix::getKeycodes( uint16_t a[] )
+{
+    /* fill in 1 modifier and 6 keys */
+
+    a[0] = modifier;
+	
+    for (int i = 0; i < 6; ++i)
+    {
+	if( fn )
+	    a[i+1] = pressedKeys[i].getAltKey();
+	else
+	    a[i+1] = pressedKeys[i].getKey();
+    }
+    
+}
+
+
+
+
 
 
 

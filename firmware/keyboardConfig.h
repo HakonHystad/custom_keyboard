@@ -67,7 +67,8 @@ Section:                                          ~settings
  * The needed value will vary dependent of the nr of rows and cloumns
  * and should be found experimentally 
 */
-#define DEBOUNCE_TIMER 10
+#define DEBOUNCE_TIMER	10
+#define MACRO_SIZE	12
 
 /*#############################################################################################################
 
