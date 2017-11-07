@@ -1,0 +1,5 @@
+SA 1-1-2-3-4-3
+
+upper radius: 33.3mm
+plate: 2mm padding, 2mm radius
+
